@@ -1,0 +1,23 @@
+services:
+  # === FRONTEND (React + Vite) ===
+  - type: static
+    name: hr-portal-ui
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        value: "https://hr-payroll.onrender.com"
+
+  # === BACKEND (FastAPI) ===
+  - type: web
+    name: hr-payroll
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: FRONTEND_URL
+        value: "https://hr-portal-ui.onrender.com"
